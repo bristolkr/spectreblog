@@ -18,13 +18,15 @@ require 'yaml'
 
 ROOT = File.dirname(__FILE__)
 
-server = WEBrick::HTTPServer.new(:Port => 8000)
+PORT = ENV["PORT"] || 8000
+
+server = WEBrick::HTTPServer.new(:Port => PORT)
 
 server.mount '/assets', WEBrick::HTTPServlet::FileHandler, "#{ROOT}/public"
 
 server.mount_proc '/' do |req, res|
   @post = YAML.load_file('post.yml')
-  template = ERB.new(File.read("#{ROOT}/index.html.erb"))
+  template = ERB.new(File.read("#{ROOT}/public/index.html.erb"))
   res.body = template.result
 end
 
